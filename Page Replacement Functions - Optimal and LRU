@@ -1,0 +1,195 @@
+
+public static void lru(){
+
+        Scanner sc = new Scanner(System.in);
+        System.out.println("\nEnter length of reference string : ");
+       
+        int n = sc.nextInt();
+        int pages[] = new int[n];
+
+        System.out.println("\nEnter the reference string : ");
+        for(int i=0; i<n; i++){
+            pages[i] = sc.nextInt();
+        }   // for - i
+
+        System.out.println("\nEnter the size of the frame window : ");
+        int f = sc.nextInt();
+       
+        int frame[] = new int[f];
+        int ac[] = new int[f];
+        int hits = 0, misses = 0, faults = 0;
+       
+
+
+        for(int i=0; i<n; i++){
+            boolean found = false;
+            int page = pages[i];
+
+
+            for(int j=0; j<f; j++){
+                if(frame[j] == page){
+                    hits++;
+                    ac[j] = i;
+                    found = true;
+                    break;
+                }   // if
+
+
+                if(frame[j]==0){
+                    faults++;
+                    ac[j] = i;
+                    frame[j] = page;
+                    found = true;
+                    break;
+                }   // if
+
+
+            }   // for - j
+
+
+
+
+            if(!found){
+
+
+                int lruIndex = 0;
+               
+                for(int j=1; j<f; j++){
+                    if(ac[j]<ac[lruIndex]){
+                        lruIndex = j;
+                    }   // if
+                }   // for - i
+
+
+                frame[lruIndex] = page;
+                ac[lruIndex] = i;
+                faults++;
+
+            }   // if
+
+        System.out.println("Frames : ");
+        for(int k=0; k<f; k++){
+            System.out.print("\t["+frame[k]+"]");
+        }
+       
+        System.out.println();
+
+
+        }   // for - i
+
+
+        System.out.println("\n\nHits : "+hits + "\nFaults : "+faults+"\nMisses : "+misses);
+
+
+    }   // lru()
+
+
+
+
+
+    public static void optimal(){
+
+
+        Scanner sc = new Scanner(System.in);
+
+
+        System.out.println("Enter reference string length : ");
+        int n = sc.nextInt();
+        int pages[] = new int[n];
+
+
+        System.out.println("Enter the reference string : ");
+        for(int i=0; i<n; i++){
+            pages[i] = sc.nextInt();
+        }   // for - i
+
+
+        System.out.println("\nEnter frame size : ");
+        int f = sc.nextInt();
+        int frames[] = new int[f];
+
+
+        int hits = 0, misses = 0, faults = 0;
+
+
+        for(int i=0; i<n; i++){
+
+
+            boolean found = false;
+            int page = pages[i];
+
+
+            for(int j=0; j<f; j++){
+                if(frames[j] == page){
+                    hits++;
+                    found = true;
+                    break;
+                }   // if
+                if(frames[j]==0){
+                    frames[j] = page;
+                    misses++;
+                    found = true;
+                    break;
+                }
+            }   // for - j
+
+
+            if(!found){
+
+
+                int maxDist = -1;
+                int farthestIndex = 0;
+
+
+                for(int j=0; j<f; j++){
+                   
+                    int nextOcc = getNextOccurence(pages, frames[j], i+1);
+                    if(nextOcc == -1){
+                        farthestIndex = j;
+                        break;
+                    }   // if
+
+
+                    if(maxDist < nextOcc){
+                        maxDist = nextOcc;
+                        farthestIndex = j;
+                    }   // if
+                }   // for - j
+                frames[farthestIndex] = page;
+                faults++;
+
+
+            }   // if
+
+
+            System.out.println("Frames : ");
+            for(int k=0; k<f; k++){
+                System.out.print("\t["+frames[k]+"]");
+            }
+       
+        System.out.println();
+
+        }   // for - i
+
+        System.out.println("\n\nHits : "+hits + "\nFaults : "+faults+"\nMisses : "+misses);
+
+
+    }   // optimal()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
